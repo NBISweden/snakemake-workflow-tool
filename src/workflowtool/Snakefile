@@ -1,0 +1,18 @@
+configfile: "workflowtool.yaml"
+
+rule final:
+    input:
+        "message.txt"
+
+
+rule message:
+    output:
+        txt="message.txt"
+    input:
+        tsv="samples.tsv"
+    run:
+        with open(input.tsv) as f:
+            n = len(f.readlines())
+        with open(output.txt, "w") as f:
+            print("Hello,", config["greeting"], file=f)
+            print("Found", n, "samples", file=f)
