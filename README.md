@@ -19,6 +19,22 @@ named `workflowtool`
 4. Run `workflowtool run`.
 
 
+# Try it
+
+The code in this repository works and can be installed and run:
+
+1. Create and activate an environment with
+   `virtualenv workflowtool && source workflowtool/bin/activate`
+   (in reality, this would not use a Python virtualenv, but a Conda environment)
+2. Run `pip install git+https://github.com/NBISweden/snakemake-workflow-tool`
+3. Run `workflowtool init testdir`
+4. `cd testdir`
+5. Run `workflowtool run`
+
+(We use a Python virtual environment for testing only. In practice, this would
+be need to be a Conda environment, see the next section.)
+
+
 # Overview
 
 ## Conda package
