@@ -13,8 +13,8 @@ named `workflowtool`
 
 1. Install with `conda create -n workflowtool workflowtool`
    and activate the environment.
-2. Run `workflowtool init pipelinedir` and change into the newly created directory
-   `pipelinedir`.
+2. Run `workflowtool init pipelinedir` and change into the newly created
+   directory `pipelinedir`.
 3. Edit `workflowtool.yaml` and `samples.tsv`.
 4. Run `workflowtool run`.
 
@@ -32,7 +32,7 @@ The code in this repository works and can be installed and run:
 5. Run `workflowtool run`
 
 (We use a Python virtual environment for testing only. In practice, this would
-be need to be a Conda environment, see the next section.)
+need to be a Conda environment, see the next section.)
 
 
 # Overview
@@ -74,21 +74,28 @@ typically at least two subcommands:
 
 ## Layout of the Python package
 
-In addition to `LICENSE` and `README.md`, these are the main files:
-
-* `pyproject.toml`
-* `setup.cfg`
-* `src/workflowtool/__init__.py`
-* `src/workflowtool/workflowtool.yaml`
-* `src/workflowtool/Snakefile`
-* `src/workflowtool/cli/__main__.py`
-* `src/workflowtool/cli/init.py`
-* `src/workflowtool/cli/run.py`
+These are the main files:
+```
+pyproject.toml
+README.md
+setup.cfg
+src
+└── workflowtool
+    ├── cli
+    │   ├── __init__.py
+    │   ├── init.py
+    │   └── run.py
+    ├── __init__.py
+    ├── __main__.py
+    ├── samples.tsv
+    ├── Snakefile
+    └── workflowtool.yaml
+```
 
 ### `pyproject.toml`
 
 `pyproject.toml` marks this as a (modern) Python package. It specifies that
-the "build backend" that we are using is `setuptools`:
+the "build backend" that we are using is `setuptools`.
 
 ### `setup.cfg`
 
@@ -117,8 +124,7 @@ with importlib.resources.path("workflowtool", "Snakefile") as snakefile:
 ```
 
 You will also need to ensure that the `Snakefile` is part of the `.tar.gz`
-file by adding it to the `options.package_data` section in `setup.cfg`
-(see above).
+file by adding it to the `options.package_data` section in `setup.cfg`.
 
 
 ## The `init` command
@@ -134,11 +140,18 @@ configuration = importlib.resources.read_text("workflowtool", "workflowtool.yaml
 with open(Path(directory) / "workflowtool.yaml", "w") as f:
     f.write(configuration)
 ```
-The code for the `init` subcommand would be in `src/workflowtool/cli/init.py`.
+The code for the `init` subcommand is in `src/workflowtool/cli/init.py`.
 
 
-## Other files
+## `__main__.py`
 
-* `src/workflowtool/__init__.py`
-* `src/workflowtool/cli/__main__.py`
-* `src/workflowtool/cli/init.py`
+This contains the entry point for the command-line tool and sets up subcommands.
+
+It autodetects which submodules exist in the `cli` module
+(`init.py` and `run.py` in this case) and adds a subcommand for each one so
+that it’s not necessary to manually maintain a list of subcommands.
+Each of the subcommand/cli modules must have
+- a docstring, which is used as the help text when the subcommand is
+  invoked with `--help`,
+- an `add_arguments()` function, which is called to set up command-line arguments,
+- and a `main()` function, which is called when the subcommand is invoked.
